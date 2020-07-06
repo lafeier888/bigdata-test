@@ -1,0 +1,5 @@
+# Project exclude paths
+/flink-test/target/
+/hdfs-test/target/
+/java-test/target/
+/target/

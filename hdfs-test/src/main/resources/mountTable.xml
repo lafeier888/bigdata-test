@@ -1,0 +1,28 @@
+<configuration>
+	
+  <!-- 这两个目录常用 -->
+  <!-- homedir这个不是挂载 -->
+  <property>
+    <name>fs.viewfs.mounttable.federationfs.homedir</name>
+    <value>/home</value>
+  </property>
+  <property>
+    <name>fs.viewfs.mounttable.federationfs.link./home</name>
+    <value>hdfs://vm01:8020/home</value>
+  </property>
+  <property>
+    <name>fs.viewfs.mounttable.federationfs.link./tmp</name>
+    <value>hdfs://vm01/tmp</value>
+  </property>
+  
+  
+  <property>
+    <name>fs.viewfs.mounttable.federationfs.link./ns1</name>
+    <value>hdfs://vm01:8020/ns1</value>
+  </property>
+  <property>
+    <name>fs.viewfs.mounttable.federationfs.link./ns2</name>
+    <value>hdfs://vm02:8020/ns2</value>
+  </property>
+  
+</configuration>
