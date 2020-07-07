@@ -73,45 +73,56 @@ object StreamDataSource {
     readFromCsvFile
     readFromTextFile
     readFromSocket
+
+    env.execute() //流程序必须有这个
+
   }
 
-    def readFromSocket = {
+  def readFromSocket = {
     val ds = env.socketTextStream("vm01", 7777)
-     ds
-  }
-
-    def readFromTextFile = {
-    val path = this.getClass.getResource("/words.txt").getPath
-    val ds = env.readTextFile(path)
+    ds.print()
     ds
   }
 
+  def readFromTextFile = {
+    val path = this.getClass.getResource("/words.txt").getPath
+    val ds = env.readTextFile(path)
+    ds.print()
+    ds
+  }
 
-    def readFromCsvFile = {
+  def readFromCsvFile = {
 
     //这个csv首行会报错,但是batch里有csv的那个就不会，因为那个有忽略首行
 
-    val env = StreamExecutionEnvironment.getExecutionEnvironment
-
     val path = this.getClass.getResource("/words.csv").getPath
+    //    pojo不能用样例类
 
-    var fields: util.List[PojoField] = new util.ArrayList[PojoField]()
-    val word = classOf[WordPojo].getDeclaredField("word")
-    val pojoFieldWord = new PojoField(word, Types.STRING)
 
-    val n = classOf[WordPojo].getDeclaredField("n")
-    val pojoFieldN = new PojoField(n, Types.INT)
+    //方法1
+    //    var fields: util.List[PojoField] = new util.ArrayList[PojoField]()
+    //    val word = classOf[WordPojo].getDeclaredField("word")
+    //    val pojoFieldWord = new PojoField(word, Types.STRING)
+    //
+    //    val n = classOf[WordPojo].getDeclaredField("n")
+    //    val pojoFieldN = new PojoField(n, Types.INT)
+    //
+    //
+    //    fields.add(pojoFieldWord)
+    //    fields.add(pojoFieldN)
+    //    val ds = env.createInput(new PojoCsvInputFormat[WordPojo](new Path(path), new PojoTypeInfo[WordPojo](classOf[WordPojo], fields)))
 
-    fields.add(pojoFieldWord)
-    fields.add(pojoFieldN)
 
-    val ds = env.createInput(new PojoCsvInputFormat[Word](new Path(path), new PojoTypeInfo[Word](classOf[Word], fields)))
+    //方法 2
+    val pojoTypeInfo = TypeExtractor.createTypeInfo(classOf[WordPojo]).asInstanceOf[PojoTypeInfo[WordPojo]]
+    val inputformat = new PojoCsvInputFormat[WordPojo](new Path(path), pojoTypeInfo)
+    val ds = env.createInput(inputformat)
     ds.print()
 
     ds
   }
 
-    def readFromKafka = {
+  def readFromKafka = {
     //    kafka配置
     var properties: Properties = new Properties()
     properties.setProperty("bootstrap.servers", "vm01:9092,vm02:9092,vm03:9092")
@@ -119,7 +130,6 @@ object StreamDataSource {
     properties.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     properties.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     properties.setProperty("auto.offset.reset", "latest")
-
 
 
     //  1用了自定义的序列化---kafka中的内容当做序列化的东西
@@ -132,6 +142,7 @@ object StreamDataSource {
         properties)
 
       val ds = env.addSource(flinkKafkaConsumer011)
+      ds.print()
       ds
     }
 
@@ -144,6 +155,7 @@ object StreamDataSource {
           new SimpleStringSchema(), //数据格式
           properties)
       val ds = env.addSource(flinkKafkaConsumer011)
+      ds.print()
       ds
     }
 
