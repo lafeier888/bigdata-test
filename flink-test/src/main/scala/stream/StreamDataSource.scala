@@ -80,14 +80,12 @@ object StreamDataSource {
 
   def readFromSocket = {
     val ds = env.socketTextStream("vm01", 7777)
-    ds.print()
     ds
   }
 
   def readFromTextFile = {
     val path = this.getClass.getResource("/words.txt").getPath
     val ds = env.readTextFile(path)
-    ds.print()
     ds
   }
 
@@ -117,7 +115,6 @@ object StreamDataSource {
     val pojoTypeInfo = TypeExtractor.createTypeInfo(classOf[WordPojo]).asInstanceOf[PojoTypeInfo[WordPojo]]
     val inputformat = new PojoCsvInputFormat[WordPojo](new Path(path), pojoTypeInfo)
     val ds = env.createInput(inputformat)
-    ds.print()
 
     ds
   }
@@ -142,7 +139,6 @@ object StreamDataSource {
         properties)
 
       val ds = env.addSource(flinkKafkaConsumer011)
-      ds.print()
       ds
     }
 
@@ -155,7 +151,6 @@ object StreamDataSource {
           new SimpleStringSchema(), //数据格式
           properties)
       val ds = env.addSource(flinkKafkaConsumer011)
-      ds.print()
       ds
     }
 
