@@ -15,6 +15,7 @@ object StreamTransform {
 
     val ds = StreamDataSource.readFromTextFile
 
+
     //    基本算子 map flatMap fliter
     //    val ds1 = ds.map(_.split(","))
     //    val ds2 = ds.flatMap(_.split(","))
@@ -22,8 +23,10 @@ object StreamTransform {
 
 
     // keyed stream才有的算子 sum/min/max
-    //    val tupleDs = ds.map(_.split(",")).map(arr => (arr(0), arr(1), arr(2)))
-    //    val ds4 = tupleDs.keyBy(0)
+    val tupleDs = ds.map(_.split(",")).map(arr => (arr(0), arr(1), arr(2)))
+    val ds4 = tupleDs.keyBy(0)
+    ds4.print()
+
 
     //    ds4.sum(1).print()
     //    ds4.min(2).print()
@@ -33,16 +36,16 @@ object StreamTransform {
     //    ds4.maxBy("n")
 
     //    分流（就是打个标签，然后在挑出来）
-    val ds5 = ds.split(item => if (item.contains("spark")) Set("spark", "spark2") else Seq("non-spark"))
-
-    val sparkDs = ds5.select("spark")
-    sparkDs.print()
-
-    val nonsparkDs = ds5.select("non-spark")
-    nonsparkDs.print()
-
-    val allDs = ds5.select("spark", "nonspark")
-    allDs.print()
+//    val ds5 = ds.split(item => if (item.contains("spark")) Set("spark", "spark2") else Seq("non-spark"))
+//
+//    val sparkDs = ds5.select("spark")
+//    sparkDs.print()
+//
+//    val nonsparkDs = ds5.select("non-spark")
+//    nonsparkDs.print()
+//
+//    val allDs = ds5.select("spark", "nonspark")
+//    allDs.print()
 
     //    合流， connect操作后 变成了ConnectedStreams
     //    val connectDs = sparkDs.connect(nonsparkDs)

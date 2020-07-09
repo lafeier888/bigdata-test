@@ -14,6 +14,7 @@ object StreamSink {
 
     val ds = StreamDataSource.readFromTextFile
 
+
     val path = "F:\\code\\bigdata-test\\flink-test\\src\\main\\resources\\stream_out"
     //    ds.print()
     //    ds.printToErr()

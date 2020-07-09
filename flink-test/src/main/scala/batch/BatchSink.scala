@@ -2,6 +2,7 @@ package batch
 
 import java.net.URI
 
+import org.apache.flink.api.common.functions.RichFlatMapFunction
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.io.{CsvOutputFormat, TextOutputFormat}
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer011
@@ -17,15 +18,16 @@ object BatchSink {
     val ds = BatchDataSource.readTextfile
 
 
+
     val path = "F:\\code\\bigdata-test\\flink-test\\src\\main\\resources\\out_csv"
 
     //    ds.printOnTaskManager("ds output:")
     //    ds.printToErr()
-//    ds.output(new TextOutputFormat[String](new Path(path)))
+    //    ds.output(new TextOutputFormat[String](new Path(path)))
 
-    ds.write(new TextOutputFormat[String](new Path(path)),path,WriteMode.OVERWRITE)
-//    ds.writeAsText(path)
-//    ds.writeAsCsv(path)
+    ds.write(new TextOutputFormat[String](new Path(path)), path, WriteMode.OVERWRITE)
+    //    ds.writeAsText(path)
+    //    ds.writeAsCsv(path)
 
     env.execute()
 
