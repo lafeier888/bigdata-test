@@ -6,6 +6,7 @@ import org.apache.flink.streaming.api.functions.ProcessFunction
 import org.apache.flink.streaming.api.scala.OutputTag
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer011
 import org.apache.flink.util.Collector
+import pojo.PersonInfo
 
 import scala.collection.immutable.Set
 
@@ -13,7 +14,7 @@ import scala.collection.immutable.Set
 object StreamTransform {
   def main(args: Array[String]): Unit = {
 
-    val ds = StreamDataSource.readFromTextFile
+    val ds = StreamDataSource.readFromCsvFile
 
 
     //    基本算子 map flatMap fliter
@@ -23,9 +24,11 @@ object StreamTransform {
 
 
     // keyed stream才有的算子 sum/min/max
-    val tupleDs = ds.map(_.split(",")).map(arr => (arr(0), arr(1), arr(2)))
-    val ds4 = tupleDs.keyBy(0)
-    ds4.print()
+
+
+    ds.print()
+    //    val ds4 = tupleDs.keyBy(0)
+    //    ds4.print()
 
 
     //    ds4.sum(1).print()
@@ -36,16 +39,16 @@ object StreamTransform {
     //    ds4.maxBy("n")
 
     //    分流（就是打个标签，然后在挑出来）
-//    val ds5 = ds.split(item => if (item.contains("spark")) Set("spark", "spark2") else Seq("non-spark"))
-//
-//    val sparkDs = ds5.select("spark")
-//    sparkDs.print()
-//
-//    val nonsparkDs = ds5.select("non-spark")
-//    nonsparkDs.print()
-//
-//    val allDs = ds5.select("spark", "nonspark")
-//    allDs.print()
+    //    val ds5 = ds.split(item => if (item.contains("spark")) Set("spark", "spark2") else Seq("non-spark"))
+    //
+    //    val sparkDs = ds5.select("spark")
+    //    sparkDs.print()
+    //
+    //    val nonsparkDs = ds5.select("non-spark")
+    //    nonsparkDs.print()
+    //
+    //    val allDs = ds5.select("spark", "nonspark")
+    //    allDs.print()
 
     //    合流， connect操作后 变成了ConnectedStreams
     //    val connectDs = sparkDs.connect(nonsparkDs)

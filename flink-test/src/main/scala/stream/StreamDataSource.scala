@@ -15,6 +15,7 @@ import org.apache.flink.core.fs.Path
 import org.apache.flink.core.memory.{DataInputView, DataOutputView}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011
+import pojo.PersonInfo
 
 
 case class Word(word: String, n: Int)
@@ -84,16 +85,18 @@ object StreamDataSource {
   }
 
   def readFromTextFile = {
-    val path = this.getClass.getResource("/words.txt").getPath
+    val path = this.getClass.getResource("/personinfo.csv").getPath
     val ds = env.readTextFile(path)
     ds
   }
+
+
 
   def readFromCsvFile = {
 
     //这个csv首行会报错,但是batch里有csv的那个就不会，因为那个有忽略首行
 
-    val path = this.getClass.getResource("/words.csv").getPath
+    val path = this.getClass.getResource("/personinfo.csv").getPath
     //    pojo不能用样例类
 
 
@@ -112,8 +115,9 @@ object StreamDataSource {
 
 
     //方法 2
-    val pojoTypeInfo = TypeExtractor.createTypeInfo(classOf[WordPojo]).asInstanceOf[PojoTypeInfo[WordPojo]]
-    val inputformat = new PojoCsvInputFormat[WordPojo](new Path(path), pojoTypeInfo)
+    val pojoTypeInfo = TypeExtractor.createTypeInfo(classOf[PersonInfo]).asInstanceOf[PojoTypeInfo[PersonInfo]]
+    var fields = Array("id","username","sex","email","registertime","street","city","country","money","age")
+    val inputformat = new PojoCsvInputFormat[PersonInfo](new Path(path), pojoTypeInfo,fields)
     val ds = env.createInput(inputformat)
 
     ds
