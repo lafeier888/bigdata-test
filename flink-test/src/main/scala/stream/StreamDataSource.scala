@@ -69,6 +69,24 @@ object StreamDataSource {
   //创建env
   val env = StreamExecutionEnvironment.getExecutionEnvironment
 
+
+  def toPersionInfo(dataStream: DataStream[String]) = {
+    val value = dataStream.map(row => {
+      val fields = row.split(",")
+      val id = fields(0).toInt
+      val name = fields(1)
+      val city = fields(2)
+      val age = fields(3).toInt
+      val sex = fields(4)
+      val tel = fields(5)
+      val addr = fields(6)
+      val email = fields(7)
+      val money = fields(8).toInt
+      PersonInfo(id, name, city, age, sex, tel, addr, email, money)
+    })
+    value
+  }
+
   def main(args: Array[String]): Unit = {
     readFromKafka
     readFromCsvFile
@@ -81,15 +99,14 @@ object StreamDataSource {
 
   def readFromSocket = {
     val ds = env.socketTextStream("vm01", 7777)
-    ds
+    toPersionInfo(ds)
   }
 
   def readFromTextFile = {
     val path = this.getClass.getResource("/personinfo.csv").getPath
     val ds = env.readTextFile(path)
-    ds
+    toPersionInfo(ds)
   }
-
 
 
   def readFromCsvFile = {
@@ -97,8 +114,7 @@ object StreamDataSource {
     //这个csv首行会报错,但是batch里有csv的那个就不会，因为那个有忽略首行
 
     val path = this.getClass.getResource("/personinfo.csv").getPath
-    //    pojo不能用样例类
-
+    //    pojo不能用样例类(主要是字段和默认构造器的缘故，看源码更清楚)
 
     //方法1
     //    var fields: util.List[PojoField] = new util.ArrayList[PojoField]()
@@ -113,11 +129,13 @@ object StreamDataSource {
     //    fields.add(pojoFieldN)
     //    val ds = env.createInput(new PojoCsvInputFormat[WordPojo](new Path(path), new PojoTypeInfo[WordPojo](classOf[WordPojo], fields)))
 
-
+    val typeinformation: TypeInformation[PersonInfo] = TypeExtractor.createTypeInfo(classOf[PersonInfo])
     //方法 2
-    val pojoTypeInfo = TypeExtractor.createTypeInfo(classOf[PersonInfo]).asInstanceOf[PojoTypeInfo[PersonInfo]]
-    var fields = Array("id","username","sex","email","registertime","street","city","country","money","age")
-    val inputformat = new PojoCsvInputFormat[PersonInfo](new Path(path), pojoTypeInfo,fields)
+    val pojoTypeInfo = typeinformation.asInstanceOf[PojoTypeInfo[PersonInfo]]
+
+    val fields = classOf[PersonInfo].getDeclaredFields.map(_.getName)
+
+    val inputformat = new PojoCsvInputFormat[PersonInfo](new Path(path), pojoTypeInfo, fields)
     val ds = env.createInput(inputformat)
 
     ds

@@ -21,6 +21,7 @@
         <module>spark-test</module>
         <module>flink-test</module>
         <module>java-test</module>
+        <module>kafka-test</module>
     </modules>
 
 
