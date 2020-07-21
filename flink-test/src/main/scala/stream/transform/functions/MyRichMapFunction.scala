@@ -1,4 +1,4 @@
-package stream.functions
+package stream.transform.functions
 
 import org.apache.flink.api.common.functions.RichMapFunction
 import pojo.PersonInfo

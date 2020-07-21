@@ -1,21 +1,16 @@
-package stream
+package stream.transform
 
-import org.apache.flink.api.common.serialization.SimpleStringSchema
-import org.apache.flink.api.scala._
-import org.apache.flink.streaming.api.functions.ProcessFunction
-import org.apache.flink.streaming.api.scala.OutputTag
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer011
-import org.apache.flink.util.Collector
-import pojo.PersonInfo
-import stream.functions.{MyMapFunction, MyRichMapFunction}
-
-import scala.collection.immutable.Set
-
+import stream.StreamDataSource
 
 object StreamTransform {
   def main(args: Array[String]): Unit = {
 
-    val ds = StreamDataSource.readFromSocket
+    //    val ds = StreamDataSource.readFromSocket
+
+
+    //    自定义source
+    //    val ds = StreamDataSource.readFromMySource()
+    //    ds.print()
 
 
     //    基本算子 map flatMap fliter
@@ -26,7 +21,7 @@ object StreamTransform {
 
     // keyed stream ，相当于group by
 
-    val ds4 = ds.keyBy("city")
+    //    val ds4 = ds.keyBy("city")
 
 
     //    聚合操作 sum/min/max
@@ -60,19 +55,19 @@ object StreamTransform {
 
     //    process function
 
-    val mianStreamDS = ds.process(new ProcessFunction[PersonInfo, String] {
-      override def processElement(value: PersonInfo, ctx: ProcessFunction[PersonInfo, String]#Context, out: Collector[String]): Unit = {
-        if (value.city == "北京")
-          out.collect(value.name)
-        else
-          ctx.output(new OutputTag[String]("非北京"), value.name)
-      }
-    })
-    mianStreamDS.print
-
-    //    side stream
-    val sideStreamDS = mianStreamDS.getSideOutput(new OutputTag[String]("非北京"))
-    sideStreamDS.print
+    //    val mianStreamDS = ds.process(new ProcessFunction[PersonInfo, String] {
+    //      override def processElement(value: PersonInfo, ctx: ProcessFunction[PersonInfo, String]#Context, out: Collector[String]): Unit = {
+    //        if (value.city == "北京")
+    //          out.collect(value.name)
+    //        else
+    //          ctx.output(new OutputTag[String]("非北京"), value.name)
+    //      }
+    //    })
+    //    mianStreamDS.print
+    //
+    //    //    side stream
+    //    val sideStreamDS = mianStreamDS.getSideOutput(new OutputTag[String]("非北京"))
+    //    sideStreamDS.print
 
 
     //    合流， connect操作后 变成了ConnectedStreams

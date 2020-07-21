@@ -1,4 +1,4 @@
-package stream
+package stream.sink
 
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.functions.sink.{RichSinkFunction, SinkFunction}
@@ -7,7 +7,7 @@ import pojo.PersonInfo
 /**
  * 自定义sink 不完善
  */
-class MyOutputFormat() extends RichSinkFunction[PersonInfo] {
+class MySink() extends RichSinkFunction[PersonInfo] {
 
 
   var connection: Int = -1

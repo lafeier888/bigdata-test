@@ -1,7 +1,2 @@
 # Project exclude paths
-/flink-test/target/
-/hdfs-test/target/
-/java-test/target/
-/target/
 **/target
-/spark-test/target/classes/META-INF/spark-test.kotlin_module

@@ -16,6 +16,7 @@ import org.apache.flink.core.memory.{DataInputView, DataOutputView}
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011
 import pojo.PersonInfo
+import stream.source.mysource.Mysource
 
 
 case class Word(word: String, n: Int)
@@ -87,6 +88,8 @@ object StreamDataSource {
     value
   }
 
+  def readFromMySource() = env.addSource(new Mysource)
+
   def main(args: Array[String]): Unit = {
     readFromKafka
     readFromCsvFile
@@ -94,7 +97,7 @@ object StreamDataSource {
     readFromSocket
 
     env.execute() //流程序必须有这个
-
+    readFromMySource()
   }
 
   def readFromSocket = {
