@@ -6,7 +6,7 @@ import java.util.{Calendar, Date}
 import kafka.serializer.StringDecoder
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.streaming.kafka.KafkaUtils
-import org.apache.spark.streaming.{Milliseconds, Seconds, StreamingContext}
+import org.apache.spark.streaming.{Duration, Milliseconds, Seconds, StreamingContext}
 import org.apache.spark.{SparkConf, SparkContext}
 
 object KafkaDirectSource {
@@ -15,11 +15,11 @@ object KafkaDirectSource {
 
     val session = SparkSession
       .builder()
-      .master("local[1]")
+      .master("local[2]")
       .appName("local test")
       .getOrCreate()
     val sc = session.sparkContext
-    val ssc = new StreamingContext(sc, Seconds(120))
+    val ssc = new StreamingContext(sc, Seconds(5))
 
 
     // kafka配置
@@ -29,22 +29,33 @@ object KafkaDirectSource {
 
     //kafka topic
     val topicSet = Set("test")
-    val name = "lafeier"
-    val bc_name = sc.broadcast(name)
 
     //获取源数据
     val directStream = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParameters, topicSet)
 
-    val ds1 = directStream.transform(rdd => {
-      rdd.map(line => {
-        val strings = line._2.split(",")
-        (strings(0), strings(1))
+    val ds = directStream.map(row => {
+      val fields = row._2.split(",")
+      val id = fields(0).toInt
+      val name = fields(1)
+      val city = fields(2)
+      val age = fields(3).toInt
+      val sex = fields(4)
+      val tel = fields(5)
+      val addr = fields(6)
+      val email = fields(7)
+      val money = fields(8).toInt
+      val createTime = fields(9).toLong
+      PersonInfo(id, name, city, age, sex, tel, addr, email, money, createTime)
+    })
+    ds
+        .window(Seconds(20),Seconds(15))
+//      .window(Duration(15000), Duration(10000))
+      .foreachRDD((rdd, time) => {
+        println("--------start------------")
+        rdd.collect().map(println(_))
+        println(time)
+        println("---------end-----------")
       })
-    })
-    ds1.foreachRDD(rdd => {
-      import session.implicits._
-      rdd.toDF("name", "age").show()
-    })
 
 
     ssc.start()

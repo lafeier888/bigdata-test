@@ -1,5 +1,5 @@
 
-import java.util.Properties
+import java.util.{Date, Properties}
 
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
@@ -12,20 +12,32 @@ object producerStreaming {
     val topics = "test"
 
     val porp = new Properties()
-    porp.put("metadata.broker.list",brokeys)
-    porp.put("bootstrap.servers",brokeys)
+    porp.put("metadata.broker.list", brokeys)
+    porp.put("bootstrap.servers", brokeys)
     porp.put("serializer.class", "kafka.serializer.StringEncoder")
     porp.put("request.required.acks", "1")
     porp.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
     porp.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
     porp.put("producer.type", "async")
 
-    val producer1 = new KafkaProducer[String,String](porp)
+    val producer1 = new KafkaProducer[String, String](porp)
 
+    val random = new Random()
+    while (true) {
 
-    while (true){
-      var teststr = "testdata" + Random.nextDouble()
-      producer1.send(new ProducerRecord[String,String](topics,teststr.toString()))
+      val row = 0 + "," +
+        "name" + "," + //name
+        "city" + "," + //city
+        Random.nextInt(80) + "," + //age
+        "男" + "," +
+        "tel" + "," +
+        "addr" + "," +
+        "email" + "," +
+        "100" + "," +
+        (System.currentTimeMillis() - 5*1000) //createTime
+      println(row)
+      producer1.send(new ProducerRecord[String, String](topics, row))
+      Thread.sleep(1000)
     }
   }
 }

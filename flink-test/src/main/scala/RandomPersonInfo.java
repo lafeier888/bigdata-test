@@ -109,6 +109,8 @@ public class RandomPersonInfo {
         File file = new File(basepath + "/data.csv");
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
 
+        long currentSecond = System.currentTimeMillis()/1000;
+
         for (int i = 0; i < 10000; i++) {
 
             int id = i;
@@ -131,6 +133,7 @@ public class RandomPersonInfo {
                     + "," + addr
                     + "," + email
                     + "," + money
+                    + "," + (currentSecond++)
                     + "\n";
             bufferedWriter.write (data);
 

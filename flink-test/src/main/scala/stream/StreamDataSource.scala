@@ -68,7 +68,7 @@ class MyTypeSerializer extends TypeSerializer[Word] {
 object StreamDataSource {
 
   //创建env
-  val env = StreamExecutionEnvironment.getExecutionEnvironment
+    val env = StreamExecutionEnvironment.getExecutionEnvironment
 
 
   def toPersionInfo(dataStream: DataStream[String]) = {
@@ -83,7 +83,8 @@ object StreamDataSource {
       val addr = fields(6)
       val email = fields(7)
       val money = fields(8).toInt
-      PersonInfo(id, name, city, age, sex, tel, addr, email, money)
+      val createTime = fields(9).toLong
+      PersonInfo(id, name, city, age, sex, tel, addr, email, money, createTime)
     })
     value
   }

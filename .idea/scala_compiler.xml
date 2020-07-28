@@ -2,5 +2,10 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <option name="higherKinds" value="true" />
+    <profile name="Maven 1" modules="flink-test">
+      <parameters>
+        <parameter value="-nobootcp" />
+      </parameters>
+    </profile>
   </component>
 </project>

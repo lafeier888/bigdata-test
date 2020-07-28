@@ -1,11 +1,13 @@
 package stream.transform
 
+import org.apache.flink.streaming.api.windowing.time.Time
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 import stream.StreamDataSource
 
 object StreamTransform {
   def main(args: Array[String]): Unit = {
 
-    //    val ds = StreamDataSource.readFromSocket
+    val ds = StreamDataSource.readFromSocket
 
 
     //    自定义source
@@ -21,8 +23,8 @@ object StreamTransform {
 
     // keyed stream ，相当于group by
 
-    //    val ds4 = ds.keyBy("city")
-
+    val ds4 = ds.keyBy("city")
+ 
 
     //    聚合操作 sum/min/max
     //    ds4.sum("money").print()

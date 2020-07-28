@@ -8,9 +8,10 @@ case class PersonInfo(var id: Int,
                       var tel: String,
                       var addr: String,
                       var email: String,
-                      var money: Int) {
+                      var money: Int,
+                      var createTime: Long) {
   def this() = {
-    this(0, "", "", 0, "", "", "", "", 0)
+    this(0, "", "", 0, "", "", "", "", 0, 0)
   }
 }
 
