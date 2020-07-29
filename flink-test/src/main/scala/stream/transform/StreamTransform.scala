@@ -1,8 +1,13 @@
 package stream.transform
 
+import java.util.function.Consumer
+
 import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 import stream.StreamDataSource
+import org.apache.flink.api.scala._
+import org.apache.flink.streaming.api.datastream.DataStreamUtils
+import pojo.PersonInfo
 
 object StreamTransform {
   def main(args: Array[String]): Unit = {
@@ -23,8 +28,9 @@ object StreamTransform {
 
     // keyed stream ，相当于group by
 
-    val ds4 = ds.keyBy("city")
- 
+    //    val ds4 = ds.keyBy("city")
+    //    ds4.print()
+
 
     //    聚合操作 sum/min/max
     //    ds4.sum("money").print()
@@ -94,6 +100,22 @@ object StreamTransform {
     //    ds.map(new MyRichMapFunction).print()
 
 
+    //    iterate
+//    val value = ds.iterate(ds => {
+//      (ds.map(p => PersonInfo(0, "null", "null", p.age + 1, "null", "null", "null", "null", 0, 0L)), ds.filter(_.age > 20))
+//    })
+//
+//    value.map(p => (p.id, p.age)).print()
+
+    DataStreamUtils.collect(ds.javaStream).forEachRemaining(new Consumer[PersonInfo] {
+      override def accept(t: PersonInfo): Unit = {
+        println(t)
+      }
+    })
+
+
+
     StreamDataSource.env.execute()
+
   }
 }

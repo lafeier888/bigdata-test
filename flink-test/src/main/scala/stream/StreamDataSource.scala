@@ -59,7 +59,6 @@ class MyTypeSerializer extends TypeSerializer[Word] {
 
   override def copy(source: DataInputView, target: DataOutputView): Unit = null
 
-  override def canEqual(obj: Any): Boolean = false
 
   override def snapshotConfiguration(): TypeSerializerSnapshot[Word] = null
 }

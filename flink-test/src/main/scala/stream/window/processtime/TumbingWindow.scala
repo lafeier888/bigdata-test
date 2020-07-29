@@ -45,6 +45,8 @@ object TumbingWindow {
       .timeWindowAll(Time.seconds(10))
       .evictor(new MyEvictor())
 
+
+
     ds3.sum("money").print()
 
     env.execute()
