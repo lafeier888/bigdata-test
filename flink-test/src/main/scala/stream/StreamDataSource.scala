@@ -67,7 +67,7 @@ class MyTypeSerializer extends TypeSerializer[Word] {
 object StreamDataSource {
 
   //创建env
-    val env = StreamExecutionEnvironment.getExecutionEnvironment
+    val env = StreamEnvironmentAPI.createLocalEnv
 
 
   def toPersionInfo(dataStream: DataStream[String]) = {

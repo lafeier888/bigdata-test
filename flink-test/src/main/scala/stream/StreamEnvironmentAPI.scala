@@ -9,10 +9,11 @@ object StreamEnvironmentAPI {
   }
 
   def createLocalEnv = {
-    StreamExecutionEnvironment.createLocalEnvironment(1)
+//    StreamExecutionEnvironment.createLocalEnvironment(1)
+    StreamExecutionEnvironment.createLocalEnvironmentWithWebUI()
   }
 
   def createRemoteEnv = {
-    StreamExecutionEnvironment.createRemoteEnvironment("host", 6123)
+    StreamExecutionEnvironment.createRemoteEnvironment("192.168.1.101", 8081,"D:\\code\\bigdata-test\\flink-test\\target\\flink-test-1.0-SNAPSHOT.jar")
   }
 }

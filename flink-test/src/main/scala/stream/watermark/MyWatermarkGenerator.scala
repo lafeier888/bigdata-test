@@ -1,6 +1,6 @@
 package stream.watermark
 
-import org.apache.flink.api.common.eventtime.{WatermarkGenerator, WatermarkOutput}
+import org.apache.flink.api.common.eventtime.{Watermark, WatermarkGenerator, WatermarkOutput}
 import pojo.PersonInfo
 
 class MyWatermarkGenerator extends WatermarkGenerator[PersonInfo] {
@@ -12,7 +12,7 @@ class MyWatermarkGenerator extends WatermarkGenerator[PersonInfo] {
   override def onEvent(t: PersonInfo, l: Long, watermarkOutput: WatermarkOutput): Unit = currentMaxTimestamp = currentMaxTimestamp.max(l)
 
   override def onPeriodicEmit(watermarkOutput: WatermarkOutput): Unit = {
-    watermarkOutput.emitWatermark(new Nothing(currentMaxTimestamp - maxOutOfOrderness - 1))
+    watermarkOutput.emitWatermark(new Watermark(currentMaxTimestamp - maxOutOfOrderness - 1))
   }
 
 }
