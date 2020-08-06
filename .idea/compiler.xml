@@ -6,13 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="scala-test" />
         <module name="flink-test" />
         <module name="yarn-test" />
-        <module name="spark-test" />
         <module name="hdfs-test" />
         <module name="kafka-test" />
         <module name="java-test" />
-        <module name="scala-test" />
+        <module name="spark-test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8" />

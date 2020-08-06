@@ -68,8 +68,6 @@
                     <groupId>log4j</groupId>
                 </exclusion>
             </exclusions>
-
-
         </dependency>
     </dependencies>
 

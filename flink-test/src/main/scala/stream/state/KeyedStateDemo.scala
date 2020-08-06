@@ -9,7 +9,7 @@ import org.apache.flink.api.common.state.{StateTtlConfig, ValueState, ValueState
 import org.apache.flink.api.common.time.Time
 import org.apache.flink.api.java.functions.KeySelector
 import org.apache.flink.api.scala._
-import org.apache.flink.configuration.{ConfigOption, Configuration, ReadableConfig}
+import org.apache.flink.configuration.{ConfigOption, Configuration}
 import org.apache.flink.runtime.state.filesystem.FsStateBackend
 import org.apache.flink.streaming.api.environment.CheckpointConfig.ExternalizedCheckpointCleanup
 import org.apache.flink.streaming.api.functions.co.KeyedBroadcastProcessFunction
@@ -75,7 +75,6 @@ object KeyedStateDemo {
         (p.city, total.value())
       }
     }).print()
-
 
 
     env.enableCheckpointing(1000)
