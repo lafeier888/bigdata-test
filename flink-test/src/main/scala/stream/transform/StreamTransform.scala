@@ -28,7 +28,7 @@ object StreamTransform {
 
     // keyed stream ，相当于group by
 
-    //    val ds4 = ds.keyBy("city")
+    val ds4 = ds.keyBy(_.city)
     //    ds4.print()
 
 
@@ -89,8 +89,15 @@ object StreamTransform {
 
 
     //    reduce 操作
-    //    ds4.keyBy(0, 1, 2, 3, 4, 5, 6, 7)
-    //    ds4.reduce((x, y) => PersonInfo(x.id, x.name, x.city, x.age, x.sex, x.tel, x.addr, x.email, x.money + y.money)).print()
+
+    ds4.reduce((x, y) => {
+      //      PersonInfo(x.id, x.name, x.city, x.age, x.sex, x.tel, x.addr, x.email, x.money + y.money)
+
+      val p = new PersonInfo()
+      p.city = x.city
+      p.money = x.money + y.money
+      p
+    }).print()
 
     //    union 操作
     //    city1.union(city2).print()
@@ -101,17 +108,18 @@ object StreamTransform {
 
 
     //    iterate
-//    val value = ds.iterate(ds => {
-//      (ds.map(p => PersonInfo(0, "null", "null", p.age + 1, "null", "null", "null", "null", 0, 0L)), ds.filter(_.age > 20))
-//    })
-//
-//    value.map(p => (p.id, p.age)).print()
+//        val value = ds.iterate(ds => {
+//          (ds.map(p => PersonInfo(0, "null", "null", p.age + 1, "null", "null", "null", "null", 0, 0L)), ds.filter(_.age > 20))
+//        })
+    //
+    //    value.map(p => (p.id, p.age)).print()
 
-    DataStreamUtils.collect(ds.javaStream).forEachRemaining(new Consumer[PersonInfo] {
-      override def accept(t: PersonInfo): Unit = {
-        println(t)
-      }
-    })
+    //    DataStreamUtils
+    //    DataStreamUtils.collect(ds.javaStream).forEachRemaining(new Consumer[PersonInfo] {
+    //      override def accept(t: PersonInfo): Unit = {
+    //        println(t)
+    //      }
+    //    })
 
 
 

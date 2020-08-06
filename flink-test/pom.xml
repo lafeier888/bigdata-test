@@ -11,8 +11,8 @@
 
     <artifactId>flink-test</artifactId>
     <properties>
-        <flink.version>1.11.1</flink.version>
-        <!--        <flink.version>1.9.2</flink.version>-->
+<!--        <flink.version>1.11.1</flink.version>-->
+                <flink.version>1.9.2</flink.version>
     </properties>
 
     <dependencies>
@@ -97,6 +97,11 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-queryable-state-runtime_2.11</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
 
     </dependencies>
 

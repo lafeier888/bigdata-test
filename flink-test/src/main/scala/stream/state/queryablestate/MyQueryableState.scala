@@ -1,10 +1,10 @@
-package stream.queryablestate
+package stream.state.queryablestate
 
 import java.util.function.Consumer
 
 import org.apache.flink.api.common.{ExecutionConfig, JobID}
 import org.apache.flink.api.common.state.{StateDescriptor, ValueState, ValueStateDescriptor}
-import org.apache.flink.api.common.typeinfo.{BasicTypeInfo, TypeInformation}
+import org.apache.flink.api.common.typeinfo.{BasicTypeInfo, TypeHint, TypeInformation}
 import org.apache.flink.queryablestate.client.QueryableStateClient
 import org.apache.flink.types.IntValue
 
@@ -14,19 +14,14 @@ object MyQueryableState {
 
 
   def main(args: Array[String]): Unit = {
-    val client = new QueryableStateClient("192.168.1.101", 9069)
+    val client = new QueryableStateClient("localhost", 9069)
 
-    val jobId = JobID.fromHexString("f735bccb941af6f0a70ba0536b5ab292")
+    val jobId = JobID.fromHexString("f248882b5bdff6bd7a38738454e4dc4d")
     val queryStateName = "mystate"
     val stateDesc= new ValueStateDescriptor[Int]("total",TypeInformation.of(classOf[Int]))
     val state = client.getKvState(jobId, queryStateName, "广州", BasicTypeInfo.STRING_TYPE_INFO, stateDesc)
-    state.thenAccept(new Consumer[ValueState[Int]] {
-      override def accept(t: ValueState[Int]): Unit = {
-        println(t.value())
-      }
-    }).get
-
-    client.shutdownAndWait()
+    val value = state.get
+    println(value.value())
 
 
   }

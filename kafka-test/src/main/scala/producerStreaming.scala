@@ -36,6 +36,7 @@ object producerStreaming {
         "100" + "," +
         //(System.currentTimeMillis()/1000-5) //createTime 延迟5秒
         (System.currentTimeMillis()/1000) //createTime
+
       println(row)
       producer1.send(new ProducerRecord[String, String](topics, row))
       Thread.sleep(1000) //一秒一条

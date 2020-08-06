@@ -1,18 +1,20 @@
 package stream.state
 
+import java.util.Optional
 import java.util.function.BiConsumer
 
-import org.apache.flink.api.common.functions.RichMapFunction
+import org.apache.flink.api.common.functions.{RichFlatMapFunction, RichMapFunction}
 import org.apache.flink.api.common.state.StateTtlConfig.TtlTimeCharacteristic
 import org.apache.flink.api.common.state.{StateTtlConfig, ValueState, ValueStateDescriptor}
 import org.apache.flink.api.common.time.Time
 import org.apache.flink.api.java.functions.KeySelector
 import org.apache.flink.api.scala._
-import org.apache.flink.configuration.Configuration
+import org.apache.flink.configuration.{ConfigOption, Configuration, ReadableConfig}
 import org.apache.flink.runtime.state.filesystem.FsStateBackend
 import org.apache.flink.streaming.api.environment.CheckpointConfig.ExternalizedCheckpointCleanup
 import org.apache.flink.streaming.api.functions.co.KeyedBroadcastProcessFunction
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+import org.apache.flink.types.IntValue
 import org.apache.flink.util.Collector
 import pojo.PersonInfo
 import stream.StreamDataSource
@@ -32,30 +34,24 @@ object KeyedStateDemo {
       }
     })
 
-//    mapwithstate算子
+    //    mapwithstate算子
 
-//    keyedDs.mapWithState[(String,Int),Int]((p,state)=>{
-//      var count = state match {
-//        case Some(s)=> s+1
-//        case None=>1
-//      }
-//      ((p.city,count),Option(count))
-//    }).print()
+    //    keyedDs.mapWithState[(String,Int),Int]((p,state)=>{
+    //      var count = state match {
+    //        case Some(s)=> s+1
+    //        case None=>1
+    //      }
+    //      ((p.city,count),Option(count))
+    //    }).print()
+
 
     keyedDs.map(new RichMapFunction[PersonInfo, (String, Int)] {
 
       var total: ValueState[Int] = _
 
-      override def map(p: PersonInfo): (String, Int) = {
-        total.update(total.value() + 1)
-        (p.city, total.value())
-      }
-
       override def open(parameters: Configuration): Unit = {
         val valueStateDescriptor = new ValueStateDescriptor[Int]("total", classOf[Int])
         valueStateDescriptor.setQueryable("mystate")
-
-
 
         //        ttl配置
         //        val ttlConfig = StateTtlConfig
@@ -72,7 +68,14 @@ object KeyedStateDemo {
 
       }
 
-    })
+      override def map(p: PersonInfo): (String, Int) = {
+
+
+        total.update(total.value() + 1)
+        (p.city, total.value())
+      }
+    }).print()
+
 
 
     env.enableCheckpointing(1000)
