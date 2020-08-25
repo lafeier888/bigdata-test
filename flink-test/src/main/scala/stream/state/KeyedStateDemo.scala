@@ -12,6 +12,7 @@ import org.apache.flink.api.scala._
 import org.apache.flink.configuration.{ConfigOption, Configuration}
 import org.apache.flink.runtime.state.filesystem.FsStateBackend
 import org.apache.flink.streaming.api.environment.CheckpointConfig.ExternalizedCheckpointCleanup
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction
 import org.apache.flink.streaming.api.functions.co.KeyedBroadcastProcessFunction
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.types.IntValue
@@ -70,17 +71,17 @@ object KeyedStateDemo {
 
       override def map(p: PersonInfo): (String, Int) = {
 
-
-        total.update(total.value() + 1)
+        //        total.update(total.value() + 1)
         (p.city, total.value())
       }
     }).print()
 
 
-    env.enableCheckpointing(1000)
-    env.getCheckpointConfig.enableExternalizedCheckpoints(ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION)
+    //    env.enableCheckpointing(1000)
+    //    env.getCheckpointConfig.enableExternalizedCheckpoints(ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION)
 
     env.execute()
   }
+
 
 }
