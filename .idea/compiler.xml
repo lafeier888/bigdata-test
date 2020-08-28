@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="flink-test" />
         <module name="yarn-test" />
+        <module name="hive-jdbc" />
         <module name="spark-test" />
         <module name="hdfs-test" />
         <module name="kafka-test" />
